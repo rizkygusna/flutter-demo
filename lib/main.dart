@@ -14,27 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Welcome to Flutter'),
-        ),
-        body: const Center(
-          child: RandomWords(),
-        ),
-      ),
+    return const MaterialApp(
+      title: 'Startup Name Generator',
+      //render the stateful widget
+      home: RandomWords(),
     );
   }
 }
 
-class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
-
-  @override
-  State<RandomWords> createState() => _RandomWordsState();
-}
-
+//State class. Immutable, can be thrown away and regenerated
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _biggerFont = const TextStyle(fontSize: 18.0);
@@ -46,22 +34,28 @@ class _RandomWordsState extends State<RandomWords> {
         title: const Text('Startup Name Generator'),
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemBuilder: (context, i){
-          if (i.isOdd) return const Divider();
-
-          final index = i ~/ 2;
-          if(index >= _suggestions.length){
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return ListTile(
-            title: Text(
-              _suggestions[index].asPascalCase,
-              style: _biggerFont,
-            ),
-          )
-        }
-      ),
-    )
+          padding: const EdgeInsets.all(16.0),
+          itemBuilder: (context, i) {
+            if (i.isOdd) return const Divider();
+            final index = i ~/ 2;
+            if (index >= _suggestions.length) {
+              _suggestions.addAll(generateWordPairs().take(10));
+            }
+            return ListTile(
+              title: Text(
+                _suggestions[index].asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          }),
+    );
   }
+}
+
+//Stateful widget, mantain state that might change
+class RandomWords extends StatefulWidget {
+  const RandomWords({Key? key}) : super(key: key);
+
+  @override
+  State<RandomWords> createState() => _RandomWordsState();
 }
