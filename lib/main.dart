@@ -1,7 +1,7 @@
 // Copyright 2018 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -16,47 +16,60 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Startup Name Generator',
-      //render the stateful widget
+      // render the stateful widget
       home: RandomWords(),
     );
   }
 }
 
-//State class for use with RandomWords. Immutable.
-//The logic of the app
+// State class for use with RandomWords. Immutable.
+// The logic of the app
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
-  //use set instead of list because saved names will be unique
+  // use set instead of list because saved names will be unique
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18.0);
+
+  void _pushSaved() {
+    // push the route to the Navigator's stack
+    dev.log('The button is pressed');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Startup Name Generator'),
+        actions: [
+          IconButton(
+            // call the handler function
+            onPressed: _pushSaved,
+            icon: const Icon(Icons.list),
+            tooltip: 'Saved Suggestion',
+          ),
+        ],
       ),
       body: ListView.builder(
           padding: const EdgeInsets.all(16.0),
           // will be called only with indices greater than or equal to zero
           itemBuilder: (context, i) {
-            //add devider if the i is odd
+            // add devider if the i is odd
             if (i.isOdd) return const Divider();
             final index = i ~/ 2;
-            //if the scroll is near end
+            // if the scroll is near end
             if (index >= _suggestions.length) {
-              //append the suggestion by 10
+              // append the suggestion by 10
               _suggestions.addAll(generateWordPairs().take(10));
             }
             // check if the entry is already saved or not
             final bool alreadySaved = _saved.contains(_suggestions[index]);
-            //render the name row
+            // render the name row
             return ListTile(
               title: Text(
                 _suggestions[index].asPascalCase,
                 style: _biggerFont,
               ),
-              //render the icon based on the alreadySaved or not
+              // render the icon based on the alreadySaved or not
               trailing: Icon(
                 alreadySaved ? Icons.favorite : Icons.favorite_border,
                 color: alreadySaved ? Colors.red : null,
