@@ -1,7 +1,6 @@
 // Copyright 2018 The Flutter team. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
 }
 
 // State class for use with RandomWords. Immutable.
-// The logic of the app
+// The logic of the Widget
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   // use set instead of list because saved names will be unique
@@ -32,7 +31,47 @@ class _RandomWordsState extends State<RandomWords> {
 
   void _pushSaved() {
     // push the route to the Navigator's stack
-    dev.log('The button is pressed');
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (context) {
+        final tiles = _saved.map(
+          (pair) {
+            return ListTile(
+              title: Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
+
+        // create list of tiles
+        // use late because this variable might not be needed
+        late final divided = ListTile.divideTiles(
+          context: context,
+          tiles: tiles,
+        ).toList();
+
+        if (tiles.isEmpty) {
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text('Saved Suggestions'),
+              ),
+              body: Center(
+                child: Text(
+                  "Saved suggestion is empty",
+                  style: _biggerFont,
+                ),
+              ));
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Saved Suggestions'),
+            ),
+            body: ListView(children: divided),
+          );
+        }
+      },
+    ));
   }
 
   @override
@@ -40,11 +79,13 @@ class _RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Startup Name Generator'),
+        // add actions in AppBar
         actions: [
+          // add one button in action list
           IconButton(
             // call the handler function
             onPressed: _pushSaved,
-            icon: const Icon(Icons.list),
+            icon: const Icon(Icons.format_list_bulleted),
             tooltip: 'Saved Suggestion',
           ),
         ],
