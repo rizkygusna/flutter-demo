@@ -1,6 +1,3 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
@@ -27,14 +24,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//Stateful widget, mantain state that might change
+class RandomWords extends StatefulWidget {
+  const RandomWords({Key? key}) : super(key: key);
+
+  @override
+  State<RandomWords> createState() => _RandomWordsState();
+}
+
 // State class for use with RandomWords. Immutable.
 // The logic of the Widget
 class _RandomWordsState extends State<RandomWords> {
+  //list of WordPair
   final _suggestions = <WordPair>[];
   // use set instead of list because saved names will be unique
   final _saved = <WordPair>{};
+  // style for Text
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
+  //push
   void _pushSaved() {
     // push the route to the Navigator's stack
     Navigator.of(context).push(MaterialPageRoute<void>(
@@ -137,12 +145,4 @@ class _RandomWordsState extends State<RandomWords> {
           }),
     );
   }
-}
-
-//Stateful widget, mantain state that might change
-class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
-
-  @override
-  State<RandomWords> createState() => _RandomWordsState();
 }
