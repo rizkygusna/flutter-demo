@@ -35,14 +35,26 @@ class RandomWords extends StatefulWidget {
 // State class for use with RandomWords. Immutable.
 // The logic of the Widget
 class _RandomWordsState extends State<RandomWords> {
-  //list of WordPair
-  final _suggestions = <WordPair>[];
+  // list of WordPair
+  final List<WordPair> _suggestions = generateWordPairs().take(10).toList();
+  // final List<WordPair> _suggestions = [];
+
   // use set instead of list because saved names will be unique
   final _saved = <WordPair>{};
   // style for Text
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
-  //push
+  // favorite icon on tap handler
+  void itemOnTapHandler(int index, bool isSaved) {
+    setState(() {
+      if (!isSaved) {
+        _saved.add(_suggestions[index]);
+      } else {
+        _saved.remove(_suggestions[index]);
+      }
+    });
+  }
+
   void _pushSaved() {
     // push the route to the Navigator's stack
     Navigator.of(context).push(MaterialPageRoute<void>(
@@ -106,41 +118,24 @@ class _RandomWordsState extends State<RandomWords> {
       ),
       body: ListView.builder(
           padding: const EdgeInsets.all(16.0),
-          // will be called only with indices greater than or equal to zero
           itemBuilder: (context, i) {
-            // add devider if the i is odd
             if (i.isOdd) return const Divider();
-            final index = i ~/ 2;
-            // if the scroll is near end
-            if (index >= _suggestions.length) {
-              // append the suggestion by 10
+            // add more data if approaching end of scroll
+            if (i >= _suggestions.length) {
               _suggestions.addAll(generateWordPairs().take(10));
             }
-            // check if the entry is already saved or not
-            final bool alreadySaved = _saved.contains(_suggestions[index]);
-            // render the name row
+            // check if the item is already saved
+            final bool isAlreadySaved = _saved.contains(_suggestions[i]);
             return ListTile(
               title: Text(
-                _suggestions[index].asPascalCase,
+                _suggestions[i].asPascalCase,
                 style: _biggerFont,
               ),
-              // render the icon based on the alreadySaved or not
               trailing: Icon(
-                alreadySaved ? Icons.favorite : Icons.favorite_border,
-                color: alreadySaved ? Colors.red : null,
-                semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
-              ),
-              // on tap handler
-              onTap: () {
-                // setState() triggers a call to the build()
-                setState(() {
-                  if (alreadySaved) {
-                    _saved.remove(_suggestions[index]);
-                  } else {
-                    _saved.add(_suggestions[index]);
-                  }
-                });
-              },
+                  isAlreadySaved ? Icons.favorite : Icons.favorite_border,
+                  color: isAlreadySaved ? Colors.red : null,
+                  semanticLabel: isAlreadySaved ? 'Remove from saved' : 'Save'),
+              onTap: () => itemOnTapHandler(i, isAlreadySaved),
             );
           }),
     );
