@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/ui/views/home/home_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:english_words/english_words.dart';
+import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
