@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-import 'package:flutter_demo/ui/views/home/home_view.dart';
+
+import 'app/app.router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,8 +20,9 @@ class MyApp extends StatelessWidget {
           foregroundColor: Colors.black,
         ),
       ),
-      // render the stateful widget
-      home: const HomeView(),
+      //use router generator from app.router file
+      initialRoute: Routes.homeView,
+      onGenerateRoute: StackedRouter().onGenerateRoute,
     );
   }
 }
