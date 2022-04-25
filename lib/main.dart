@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:flutter_demo/ui/views/home/home_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       // render the stateful widget
-      home: const RandomWords(),
+      home: const HomeView(),
     );
   }
 }
